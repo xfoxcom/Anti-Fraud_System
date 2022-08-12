@@ -26,13 +26,14 @@ public ResponseEntity<Result> transaction (@RequestBody @Valid Amount amount) {
          return ResponseEntity.ok(new Result("PROHIBITED"));
 }
 @PostMapping("/api/auth/user")
-public User register(@RequestBody @Valid User user) {
-    if (userRepository.existsById(user.getId())) {
+public ResponseEntity<User> register(@RequestBody @Valid User user) {
+    if (userRepository.existsByUsernameIgnoreCase(user.getUsername())) {
         throw new ResponseStatusException(HttpStatus.CONFLICT);
     }
+    user.setRole("ROLE_USER");
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
-    return user;
+    return new ResponseEntity<>(user, HttpStatus.CREATED);
 }
 @GetMapping("/api/auth/list")
 public List<User> getAllUsers () {
@@ -40,16 +41,9 @@ public List<User> getAllUsers () {
 }
 @DeleteMapping("/api/auth/user/{username}")
 public ResponseEntity<Object> deleteUser (@PathVariable String username) {
-    if (userRepository.existsByUsernameIgnoreCase(username)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    userRepository.deleteByUsernameIgnoreCase(username);
-    class Response {
-        String username;
-        String status;
-        public Response(String username, String status){
-            this.username = username;
-            this.status = status;
-        }
-    }
-    return ResponseEntity.ok(new Response(userRepository.findByUsername(username).getUsername(), "Deleted successfully!"));
+    if (!userRepository.existsByUsernameIgnoreCase(username)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    User user = userRepository.findByUsernameIgnoreCase(username);
+    userRepository.delete(user);
+    return ResponseEntity.ok(new Response(user.getUsername(), "Deleted successfully!"));
 }
 }

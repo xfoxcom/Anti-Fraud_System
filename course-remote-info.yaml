@@ -3,14 +3,14 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/657120/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: Thu, 11 Aug 2022 13:21:04 UTC
+update_date: Fri, 12 Aug 2022 07:18:52 UTC
 stages:
 - id: 1161
   step: 18067
   is_completed: true
 - id: 1162
   step: 18068
-  is_completed: false
+  is_completed: true
 - id: 1163
   step: 18069
   is_completed: false
@@ -47,14 +47,8 @@ topics:
     theory_id: 6633
   - title: HyperText Transfer Protocol
     theory_id: 6569
-  - title: HTML basics
-    theory_id: 6434
   - title: HTTP URL
     theory_id: 6740
-  - title: Tags and Attributes
-    theory_id: 7536
-  - title: HTML page structure
-    theory_id: 6491
   - title: Introduction to Spring Boot
     theory_id: 7944
   - title: Getting started with Spring Boot
@@ -203,6 +197,12 @@ topics:
     theory_id: 6216
   - title: Web development
     theory_id: 13931
+  - title: HTML basics
+    theory_id: 6434
+  - title: Tags and Attributes
+    theory_id: 7536
+  - title: HTML page structure
+    theory_id: 6491
   - title: Libraries
     theory_id: 8504
   - title: Frameworks
