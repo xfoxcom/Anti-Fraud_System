@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -30,7 +31,13 @@ public ResponseEntity<User> register(@RequestBody @Valid User user) {
     if (userRepository.existsByUsernameIgnoreCase(user.getUsername())) {
         throw new ResponseStatusException(HttpStatus.CONFLICT);
     }
-    user.setRole("ROLE_USER");
+    if (userRepository.count() == 0) {
+        user.setRole("ADMINISTRATOR");
+        user.setAccountNonLocked(true);
+    } else {
+        user.setRole("MERCHANT");
+        user.setAccountNonLocked(false);
+    }
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -45,5 +52,34 @@ public ResponseEntity<Object> deleteUser (@PathVariable String username) {
     User user = userRepository.findByUsernameIgnoreCase(username);
     userRepository.delete(user);
     return ResponseEntity.ok(new Response(user.getUsername(), "Deleted successfully!"));
+}
+@PutMapping("/api/auth/role")
+public User changeRole(@RequestBody roleRequest roleRequest) {
+    String username = roleRequest.getUsername();
+    String role = roleRequest.getRole();
+    if (!userRepository.existsByUsernameIgnoreCase(username)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    if (!roleRequest.getRole().equals("SUPPORT") & !roleRequest.getRole().equals("MERCHANT")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    User user = userRepository.findByUsernameIgnoreCase(username);
+    if (user.getRole().equals(roleRequest.getRole())) throw new ResponseStatusException(HttpStatus.CONFLICT);
+    if (user.getRole().equals("ADMINISTRATOR")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    user.setRole(role);
+    userRepository.save(user);
+    return user;
+}
+@PutMapping("/api/auth/access")
+ public Map<String, String> changeStatus(@RequestBody accessRequest accessRequest) {
+    if (!userRepository.existsByUsernameIgnoreCase(accessRequest.getUsername())) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    User user = userRepository.findByUsernameIgnoreCase(accessRequest.getUsername());
+    if (user.getRole().equals("ADMINISTRATOR")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    String operation = accessRequest.getOperation();
+    switch (operation) {
+        case "LOCK": user.setAccountNonLocked(false);
+        userRepository.save(user);
+        return Map.of("status", "User " + user.getUsername() + " locked!");
+        case "UNLOCK": user.setAccountNonLocked(true);
+            userRepository.save(user);
+            return Map.of("status", "User " + user.getUsername() + " unlocked!");
+    }
+    return Map.of();
 }
 }

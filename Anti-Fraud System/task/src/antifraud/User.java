@@ -25,6 +25,7 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotEmpty
     private String password;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String role;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean isAccountNonLocked;
 }
