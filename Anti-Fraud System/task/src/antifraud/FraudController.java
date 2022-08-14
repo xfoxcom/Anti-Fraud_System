@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +22,29 @@ public class FraudController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    suspIPsRepository IPs;
+    @Autowired
+    StolenCardsRepository Cards;
+
 @PostMapping("/api/antifraud/transaction")
 public ResponseEntity<Result> transaction (@RequestBody @Valid Amount amount) {
-         if (amount.getAmount() <= 200) return ResponseEntity.ok(new Result("ALLOWED"));
-         if (amount.getAmount() <= 1500) return ResponseEntity.ok(new Result("MANUAL_PROCESSING"));
-         return ResponseEntity.ok(new Result("PROHIBITED"));
+    if (!AntiFraudController.isLuhn(amount.getNumber())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    List<String> reasons = new ArrayList<>();
+
+    if (Cards.existsByNumber(amount.getNumber())) reasons.add("card-number");
+    if (IPs.existsByIp(amount.getIp())) reasons.add("ip");
+    if (amount.getAmount() > 200) reasons.add("amount");
+
+    if (reasons.isEmpty()) return ResponseEntity.ok(new Result("ALLOWED", "none"));
+
+    reasons.sort(Comparator.naturalOrder());
+
+    if (reasons.contains("ip") | reasons.contains("card-number") | amount.getAmount() > 1500) {
+        return ResponseEntity.ok(new Result("PROHIBITED", reasons.toString())); // TODO: 14.08.2022 Вывод списка строкой
+    }
+
+    return ResponseEntity.ok(new Result("MANUAL_PROCESSING","amount"));
 }
 @PostMapping("/api/auth/user")
 public ResponseEntity<User> register(@RequestBody @Valid User user) {
