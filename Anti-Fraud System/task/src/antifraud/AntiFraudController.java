@@ -28,13 +28,14 @@ public class AntiFraudController {
         suspiciousIP suspiciousIP = new suspiciousIP();
         suspiciousIP.setIp(ip.get("ip"));
         IPs.save(suspiciousIP);
-        return new ResponseEntity<>(suspiciousIP, HttpStatus.CREATED);
+        return new ResponseEntity<>(suspiciousIP, HttpStatus.OK);
     }
     @DeleteMapping("api/antifraud/suspicious-ip/{ip}")
     public Map<String, String> deleteIP(@PathVariable String ip) {
         if (!ip.matches(ipPattern)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         if (!IPs.existsByIp(ip)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         IPs.deleteByIp(ip);
+
         return Map.of("status", "IP " + ip + " successfully removed!");
     }
     @GetMapping("api/antifraud/suspicious-ip")
@@ -48,12 +49,13 @@ public class AntiFraudController {
     public ResponseEntity<StolenCard> postStolenCard(@RequestBody StolenCard stolenCard) {
         if (Cards.existsByNumber(stolenCard.getNumber())) throw new ResponseStatusException(HttpStatus.CONFLICT);
         if (!isLuhn(stolenCard.getNumber())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(stolenCard, HttpStatus.CREATED);
+        Cards.save(stolenCard);
+        return new ResponseEntity<>(stolenCard, HttpStatus.OK);
     }
     @DeleteMapping("api/antifraud/stolencard/{number}")
     public Map<String, String> deleteStolenCard(@PathVariable String number) {
-        if (!Cards.existsByNumber(number)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         if (!isLuhn(number)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        if (!Cards.existsByNumber(number)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         Cards.deleteByNumber(number);
         return Map.of("status", "Card " + number + " successfully removed!");
     }

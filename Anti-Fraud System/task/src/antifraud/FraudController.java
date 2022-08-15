@@ -34,14 +34,14 @@ public ResponseEntity<Result> transaction (@RequestBody @Valid Amount amount) {
 
     if (Cards.existsByNumber(amount.getNumber())) reasons.add("card-number");
     if (IPs.existsByIp(amount.getIp())) reasons.add("ip");
-    if (amount.getAmount() > 200) reasons.add("amount");
+    if (amount.getAmount() > 1500) reasons.add("amount");
 
-    if (reasons.isEmpty()) return ResponseEntity.ok(new Result("ALLOWED", "none"));
+    if (amount.getAmount() <= 200 & reasons.isEmpty()) return ResponseEntity.ok(new Result("ALLOWED", "none"));
 
     reasons.sort(Comparator.naturalOrder());
 
     if (reasons.contains("ip") | reasons.contains("card-number") | amount.getAmount() > 1500) {
-        return ResponseEntity.ok(new Result("PROHIBITED", reasons.toString())); // TODO: 14.08.2022 Вывод списка строкой
+        return ResponseEntity.ok(new Result("PROHIBITED", String.join(", ", reasons)));
     }
 
     return ResponseEntity.ok(new Result("MANUAL_PROCESSING","amount"));
