@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,30 +22,45 @@ public class FraudController {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
-
     @Autowired
     suspIPsRepository IPs;
     @Autowired
     StolenCardsRepository Cards;
+    @Autowired
+    TransactionRepository transactionRepository;
 
 @PostMapping("/api/antifraud/transaction")
 public ResponseEntity<Result> transaction (@RequestBody @Valid Amount amount) {
     if (!AntiFraudController.isLuhn(amount.getNumber())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    if (!amount.isValidRegion()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     List<String> reasons = new ArrayList<>();
+
+    List<Amount> trans = transactionRepository.findAllByNumberAndDateBetween(amount.getNumber(), amount.getDate().minusHours(1), amount.getDate());
+
+    long countIP = trans.stream().map(Amount::getIp).distinct().filter(i -> !i.equals(amount.getIp())).count();
+    long countRegion = trans.stream().map(Amount::getRegion).distinct().filter(i -> !i.equals(amount.getRegion())).count();
 
     if (Cards.existsByNumber(amount.getNumber())) reasons.add("card-number");
     if (IPs.existsByIp(amount.getIp())) reasons.add("ip");
-    if (amount.getAmount() > 1500) reasons.add("amount");
+    if (amount.getAmount() > 200) reasons.add("amount");
+    if (countIP >= 2) reasons.add("ip-correlation");
+    if (countRegion >= 2) reasons.add("region-correlation");
 
-    if (amount.getAmount() <= 200 & reasons.isEmpty()) return ResponseEntity.ok(new Result("ALLOWED", "none"));
+    if (amount.getAmount() <= 200 & reasons.isEmpty()) {
+        transactionRepository.save(amount);
+        return ResponseEntity.ok(new Result("ALLOWED", "none"));
+    }
 
     reasons.sort(Comparator.naturalOrder());
 
-    if (reasons.contains("ip") | reasons.contains("card-number") | amount.getAmount() > 1500) {
+    if (reasons.contains("ip") | reasons.contains("card-number") | amount.getAmount() > 1500 | countRegion > 2 | countIP > 2) {
+        transactionRepository.save(amount);
+        if (amount.getAmount() < 1500) reasons.remove("amount");
         return ResponseEntity.ok(new Result("PROHIBITED", String.join(", ", reasons)));
     }
 
-    return ResponseEntity.ok(new Result("MANUAL_PROCESSING","amount"));
+    transactionRepository.save(amount);
+    return ResponseEntity.ok(new Result("MANUAL_PROCESSING", String.join(", ", reasons)));
 }
 @PostMapping("/api/auth/user")
 public ResponseEntity<User> register(@RequestBody @Valid User user) {
@@ -87,7 +103,7 @@ public User changeRole(@RequestBody roleRequest roleRequest) {
     return user;
 }
 @PutMapping("/api/auth/access")
- public Map<String, String> changeStatus(@RequestBody accessRequest accessRequest) {
+public Map<String, String> changeStatus(@RequestBody accessRequest accessRequest) {
     if (!userRepository.existsByUsernameIgnoreCase(accessRequest.getUsername())) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     User user = userRepository.findByUsernameIgnoreCase(accessRequest.getUsername());
     if (user.getRole().equals("ADMINISTRATOR")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -102,4 +118,12 @@ public User changeRole(@RequestBody roleRequest roleRequest) {
     }
     return Map.of();
 }
+public long checkIp(Amount amount) {
+   List<Amount> trans = transactionRepository.findAllByNumberAndDateBetween(amount.getNumber(), amount.getDate().minusHours(1), amount.getDate());
+   return trans.stream().filter(number -> !Cards.existsByNumber(number.getNumber())).map(Amount::getIp).filter(ip -> !IPs.existsByIp(ip)).distinct().filter(i -> !i.equals(amount.getIp())).count();
+}
+public long checkRegion(Amount amount) {
+    List<Amount> trans = transactionRepository.findAllByNumberAndDateBetween(amount.getNumber(), amount.getDate().minusHours(1), amount.getDate());
+    return trans.stream().filter(number -> !Cards.existsByNumber(number.getNumber())).filter(ip -> !IPs.existsByIp(ip.getIp())).map(Amount::getRegion).distinct().count();
+    }
 }
