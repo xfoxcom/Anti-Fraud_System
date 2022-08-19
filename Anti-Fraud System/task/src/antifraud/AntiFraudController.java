@@ -17,7 +17,6 @@ public class AntiFraudController {
 
     @Autowired
     suspIPsRepository IPs;
-
     @Autowired
     StolenCardsRepository Cards;
 
@@ -44,7 +43,6 @@ public class AntiFraudController {
         listOfIp.sort(Comparator.comparing(suspiciousIP::getId));
         return listOfIp;
     }
-
     @PostMapping("api/antifraud/stolencard")
     public ResponseEntity<StolenCard> postStolenCard(@RequestBody StolenCard stolenCard) {
         if (Cards.existsByNumber(stolenCard.getNumber())) throw new ResponseStatusException(HttpStatus.CONFLICT);
@@ -65,7 +63,6 @@ public class AntiFraudController {
         list.sort(Comparator.comparing(StolenCard::getId));
         return list;
     }
-
     public static boolean isLuhn (String value) {
         int sum = Character.getNumericValue(value.charAt(value.length() - 1));
         int parity = value.length() % 2;

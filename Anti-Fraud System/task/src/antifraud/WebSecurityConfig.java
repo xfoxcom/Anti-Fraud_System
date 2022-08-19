@@ -3,6 +3,7 @@ package antifraud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,13 +32,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers("/api/auth/role").hasRole("ADMINISTRATOR")
                 .mvcMatchers("/api/auth/access").hasRole("ADMINISTRATOR")
-                .mvcMatchers("/api/antifraud/transaction").hasRole("MERCHANT")
+                .mvcMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasRole("MERCHANT")
                 .mvcMatchers("/api/auth/user/*").hasRole("ADMINISTRATOR")
                 .mvcMatchers("/api/auth/list").hasAnyRole("ADMINISTRATOR", "SUPPORT")
                 .mvcMatchers("/api/antifraud/suspicious-ip/*").hasRole("SUPPORT")
                 .mvcMatchers("/api/antifraud/stolencard/*").hasRole("SUPPORT")
                 .mvcMatchers("/api/antifraud/suspicious-ip").hasRole("SUPPORT")
                 .mvcMatchers("/api/antifraud/stolencard").hasRole("SUPPORT")
+                .mvcMatchers("/api/antifraud/history/*").hasRole("SUPPORT")
+                .mvcMatchers("/api/antifraud/history").hasRole("SUPPORT")
+                .mvcMatchers(HttpMethod.PUT, "/api/antifraud/transaction").hasRole("SUPPORT")
                 .mvcMatchers("/api/auth/user").permitAll()
                 .mvcMatchers("/actuator/shutdown").permitAll()
                 .and().csrf().disable().headers().frameOptions().disable()
