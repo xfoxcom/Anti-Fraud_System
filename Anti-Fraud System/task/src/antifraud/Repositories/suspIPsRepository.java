@@ -1,5 +1,6 @@
-package antifraud;
+package antifraud.Repositories;
 
+import antifraud.Entity.suspiciousIP;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

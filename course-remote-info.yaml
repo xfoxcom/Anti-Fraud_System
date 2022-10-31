@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/657120/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: Fri, 19 Aug 2022 12:19:57 UTC
+update_date: Mon, 31 Oct 2022 16:41:23 UTC
 stages:
 - id: 1161
   step: 18067
@@ -47,14 +47,22 @@ topics:
     theory_id: 6633
   - title: HyperText Transfer Protocol
     theory_id: 6569
-  - title: HTTP URL
-    theory_id: 6740
   - title: Introduction to Spring Boot
     theory_id: 7944
   - title: Getting started with Spring Boot
     theory_id: 6336
+  - title: HTTP URL
+    theory_id: 6740
   - title: Basic project structure
     theory_id: 6339
+  - title: IoC Container
+    theory_id: 16851
+  - title: Spring beans
+    theory_id: 14641
+  - title: Spring components
+    theory_id: 14652
+  - title: Spring Security Crypto
+    theory_id: 21866
   - title: HTTP messages
     theory_id: 6752
   - title: Introduction to Spring Web MVC
@@ -167,6 +175,8 @@ topics:
     theory_id: 3614
   - title: Package
     theory_id: 3621
+  - title: Hierarchy of exceptions
+    theory_id: 3570
   - title: Build tools
     theory_id: 4284
   - title: Command line overview
@@ -199,20 +209,34 @@ topics:
     theory_id: 13931
   - title: HTML basics
     theory_id: 6434
-  - title: Tags and Attributes
-    theory_id: 7536
-  - title: HTML page structure
-    theory_id: 6491
   - title: Libraries
     theory_id: 8504
   - title: Frameworks
     theory_id: 6701
+  - title: Tags and Attributes
+    theory_id: 7536
+  - title: HTML page structure
+    theory_id: 6491
+  - title: What is a bug
+    theory_id: 5504
+  - title: Functional testing
+    theory_id: 13438
+  - title: Unit testing
+    theory_id: 7545
+  - title: Dependency injection
+    theory_id: 20580
   - title: YAML
     theory_id: 12722
+  - title: Interfaces
+    theory_id: 9640
   - title: Introduction to software architecture
     theory_id: 15368
   - title: JSON
     theory_id: 6854
+  - title: Introduction to logging
+    theory_id: 5538
+  - title: Debugging techniques
+    theory_id: 13775
   - title: Authentication and Authorization
     theory_id: 14219
   - title: Introduction to generic programming
@@ -280,10 +304,10 @@ topics:
   1:
   - title: H2 database
     theory_id: 8762
-  - title: Custom User Store
-    theory_id: 16191
   - title: HTTP Basic Auth
     theory_id: 7778
+  - title: Custom User Store
+    theory_id: 16191
   - title: Introduction to databases
     theory_id: 8497
   - title: XML
@@ -316,14 +340,10 @@ topics:
   - title: Introduction to PostgreSQL
     theory_id: 17974
   3:
-  - title: IoC Container
-    theory_id: 16851
-  - title: Spring beans
-    theory_id: 14641
-  - title: Spring components
-    theory_id: 14652
   - title: '@Bean vs @Component'
     theory_id: 14771
+  - title: ApplicationContext
+    theory_id: 22062
   - title: Scopes of beans
     theory_id: 19487
   - title: Bean lifecycle
@@ -332,24 +352,6 @@ topics:
     theory_id: 18031
   - title: POST vs. PUT requests
     theory_id: 13714
-  - title: Interfaces
-    theory_id: 9640
-  - title: Lambda expressions
-    theory_id: 11635
-  - title: Method references
-    theory_id: 3620
-  - title: Functional interfaces
-    theory_id: 11636
-  - title: Standard functional interfaces
-    theory_id: 3623
-  - title: Optional
-    theory_id: 9699
-  - title: Generic methods
-    theory_id: 3606
-  - title: Anonymous classes
-    theory_id: 11896
-  - title: Default methods
-    theory_id: 11354
   4:
   - title: IP
     theory_id: 13662
@@ -360,5 +362,9 @@ topics:
   5:
   - title: The concept of patterns
     theory_id: 3611
+  - title: Introduction to creational patterns
+    theory_id: 16251
+  - title: Builder pattern
+    theory_id: 16735
   - title: Builder
     theory_id: 5130

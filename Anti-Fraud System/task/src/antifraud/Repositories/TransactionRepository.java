@@ -1,5 +1,6 @@
-package antifraud;
+package antifraud.Repositories;
 
+import antifraud.Entity.Amount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

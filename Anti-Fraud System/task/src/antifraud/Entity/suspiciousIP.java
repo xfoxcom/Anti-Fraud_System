@@ -1,19 +1,21 @@
-package antifraud;
+package antifraud.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "stolen_cards")
-public class StolenCard {
+public class suspiciousIP {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String number;
+    private String ip;
 }

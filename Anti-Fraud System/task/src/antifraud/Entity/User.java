@@ -1,4 +1,4 @@
-package antifraud;
+package antifraud.Entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

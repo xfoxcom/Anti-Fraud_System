@@ -1,5 +1,15 @@
-package antifraud;
+package antifraud.Controllers;
 
+import antifraud.Entity.Amount;
+import antifraud.Entity.Feedback;
+import antifraud.Entity.Limits;
+import antifraud.Entity.User;
+import antifraud.Repositories.*;
+import antifraud.Request.accessRequest;
+import antifraud.Request.roleRequest;
+import antifraud.Response.Response;
+import antifraud.Web.Result;
+import antifraud.Web.putFb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -151,8 +161,8 @@ public List<User> getAllUsers () {
 }
 @DeleteMapping("/api/auth/user/{username}")
 public ResponseEntity<Object> deleteUser (@PathVariable String username) {
-    if (!userRepository.existsByUsernameIgnoreCase(username)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    User user = userRepository.findByUsernameIgnoreCase(username);
+
+    User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     userRepository.delete(user);
     return ResponseEntity.ok(new Response(user.getUsername(), "Deleted successfully!"));
 }
@@ -160,9 +170,9 @@ public ResponseEntity<Object> deleteUser (@PathVariable String username) {
 public User changeRole(@RequestBody roleRequest roleRequest) {
     String username = roleRequest.getUsername();
     String role = roleRequest.getRole();
-    if (!userRepository.existsByUsernameIgnoreCase(username)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
     if (!roleRequest.getRole().equals("SUPPORT") & !roleRequest.getRole().equals("MERCHANT")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-    User user = userRepository.findByUsernameIgnoreCase(username);
+    User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     if (user.getRole().equals(roleRequest.getRole())) throw new ResponseStatusException(HttpStatus.CONFLICT);
     if (user.getRole().equals("ADMINISTRATOR")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     user.setRole(role);
@@ -171,8 +181,8 @@ public User changeRole(@RequestBody roleRequest roleRequest) {
 }
 @PutMapping("/api/auth/access")
 public Map<String, String> changeStatus(@RequestBody accessRequest accessRequest) {
-    if (!userRepository.existsByUsernameIgnoreCase(accessRequest.getUsername())) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    User user = userRepository.findByUsernameIgnoreCase(accessRequest.getUsername());
+
+    User user = userRepository.findByUsernameIgnoreCase(accessRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     if (user.getRole().equals("ADMINISTRATOR")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     String operation = accessRequest.getOperation();
     switch (operation) {

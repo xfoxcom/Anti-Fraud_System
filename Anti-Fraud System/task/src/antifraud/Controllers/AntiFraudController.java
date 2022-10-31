@@ -1,5 +1,9 @@
-package antifraud;
+package antifraud.Controllers;
 
+import antifraud.Entity.StolenCard;
+import antifraud.Entity.suspiciousIP;
+import antifraud.Repositories.StolenCardsRepository;
+import antifraud.Repositories.suspIPsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
