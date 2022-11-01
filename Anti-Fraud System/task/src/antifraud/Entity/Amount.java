@@ -1,6 +1,7 @@
 package antifraud.Entity;
 
 import antifraud.Controllers.AntiFraudController;
+import antifraud.Service.serviceImpl.ipServiceImpl;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class Amount {
     @NotNull
     private Long amount;
     @NotEmpty
-    @Pattern(regexp = AntiFraudController.ipPattern)
+    @Pattern(regexp = ipServiceImpl.ipPattern)
     private String ip;
     @NotEmpty
     private String number;
