@@ -7,6 +7,7 @@ import antifraud.repositories.*;
 import antifraud.service.TransactionService.TransactionService;
 import antifraud.service.serviceImpl.cardServiceImpl;
 import antifraud.web.Result;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -28,18 +30,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final suspIPsRepository IPs;
 
     private final StolenCardsRepository Cards;
-
-    public TransactionServiceImpl(TransactionRepository transactionRepository,
-                                  FeedbackRepository feedbackRepository,
-                                  LimitRepository limits,
-                                  suspIPsRepository iPs,
-                                  StolenCardsRepository cards) {
-        this.transactionRepository = transactionRepository;
-        this.feedbackRepository = feedbackRepository;
-        this.limits = limits;
-        this.IPs = iPs;
-        this.Cards = cards;
-    }
 
     @Override
     @Transactional
@@ -158,9 +148,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         reasons.sort(Comparator.naturalOrder());
 
-        if (reasons.contains("ip") | reasons.contains("card-number") | amount.getAmount() > maxLimit | countRegion > 2 | countIP > 2) {  // 1500
+        if (reasons.contains("ip") | reasons.contains("card-number") | amount.getAmount() > maxLimit | countRegion > 2 | countIP > 2) {
             transactionRepository.save(amount);
-            if (amount.getAmount() < maxLimit) reasons.remove("amount"); //1500
+            if (amount.getAmount() < maxLimit) reasons.remove("amount");
             feedback.setResult("PROHIBITED");
             feedback.setTransactionId(amount.getId());
             feedbackRepository.save(feedback);
