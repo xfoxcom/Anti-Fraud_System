@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Anti-Fraud_System_Confilcts.iml" filepath="$PROJECT_DIR$/.idea/modules/Anti-Fraud_System_Confilcts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Anti-Fraud System/task/Anti-Fraud_System_Confilcts.Anti-Fraud_System-task.iml" filepath="$PROJECT_DIR$/.idea/modules/Anti-Fraud System/task/Anti-Fraud_System_Confilcts.Anti-Fraud_System-task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Anti-Fraud System/task/Anti-Fraud_System_Confilcts.Anti-Fraud_System-task.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Anti-Fraud System/task/Anti-Fraud_System_Confilcts.Anti-Fraud_System-task.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Anti-Fraud System/task/Anti-Fraud_System_Confilcts.Anti-Fraud_System-task.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Anti-Fraud System/task/Anti-Fraud_System_Confilcts.Anti-Fraud_System-task.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Anti-Fraud_System_Confilcts.util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Anti-Fraud_System_Confilcts.util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Anti-Fraud_System_Confilcts.util.main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Anti-Fraud_System_Confilcts.util.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Anti-Fraud_System_Confilcts.util.test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Anti-Fraud_System_Confilcts.util.test.iml" />
+    </modules>
+  </component>
+</project>

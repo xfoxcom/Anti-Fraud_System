@@ -1,1 +1,9 @@
-/.idea/
+# Project exclude paths
+/.gradle/
+.idea
+.gitignore
+course-info.yaml
+course-remote-info.yaml
+gradlew.bat
+gradlew
+gradle
